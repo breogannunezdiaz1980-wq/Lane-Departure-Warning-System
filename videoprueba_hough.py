@@ -29,7 +29,7 @@ frame_count = 0
 while True:
     state, frame = cap.read()
     if not state:
-        print("Fin de la transmisión")
+        print("end")
         break   
     #We use this to normalize the video
     frame = cv.resize(frame, (1920, 1080))
