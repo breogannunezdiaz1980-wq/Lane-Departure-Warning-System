@@ -1,23 +1,23 @@
-# Lane-Departure-Warning-System
 # Lane Departure Warning System (LDWS)
 
-> **Status:** Under Active Development (Prototype Phase)  
-> **Author:** Breogan Núñez Díaz
-> **Target Performance:** Real-time processing (~30 FPS) on edge devices.
+> **Status:** Active Development (Prototype Phase)  
+> **Author:** Breogan Núñez Díaz  
+> **Target Performance:** Real-time processing (~30-60 FPS) on edge devices
 
-A lightweight, robust Advanced Driver Assistance System (ADAS) built with Python and OpenCV. This system detects lane lines in video streams and issues real-time warnings to prevent accidents caused by unintended lane departures or driver distractions.
+A lightweight, robust Advanced Driver Assistance System (ADAS) prototype built with Python and OpenCV. This system detects lane lines in video streams and evaluates vehicle position in real-time using spatial masking and geometric filtering.
 
 ---
 
 ## Project Overview
 
-In Spain, nearly 32% of traffic accidents are caused by driver distractions leading to lane drift. This project aims to build an independent, highly efficient Lane Departure Warning System (LDWS) using classical Computer Vision and mathematical modeling, eliminating the need for heavy Deep Learning dependencies while maintaining real-time execution across low-power hardware.
+In Spain, nearly 32% of traffic accidents are caused by driver distractions leading to lane drift. This project aims to build an independent, highly efficient Lane Departure Warning System (LDWS) using classical Computer Vision and lightweight spatial logic, eliminating the need for heavy Deep Learning dependencies while maintaining real-time execution across low-power hardware.
 
 ### Key Features
-- Classical CV Pipeline: High-speed edge detection and feature extraction without neural networks.
-- Hough Line Detection & Masking: Spatial Region of Interest (ROI) filtering to isolate relevant road markings and ignore road noise/arrows.
-- Reactive Safety Logic: Pixel-level contact point calculations to detect when the vehicle touches or crosses lane boundaries[cite: 1].
-- Cross-Platform & Lightweight: Optimized for ~60 FPS on standard computing hardware[cite: 1].
+- **Classical CV Pipeline:** High-speed edge detection and feature extraction without neural networks.
+- **Hough Line Detection & Masking:** Spatial Region of Interest (ROI) filtering to isolate relevant road markings.
+- **Slope-Based Filtering:** Discards horizontal and near-horizontal segments to eliminate noise and irrelevant markings.
+- **Spatial Trap-Zone Logic:** Fast pixel-counting mechanism (`countNonZero`) inside designated alert zones to detect lane invasion.
+- **Cross-Platform & Lightweight:** Optimized for ~60 FPS on standard hardware.
 
 ---
 
@@ -25,12 +25,12 @@ In Spain, nearly 32% of traffic accidents are caused by driver distractions lead
 
 The current processing pipeline follows a structured sequence:
 
-1. Video Capture & Preprocessing: Frame resizing, Grayscale conversion, and Gaussian Blur to reduce high-frequency noise[cite: 1].
-2. Spatial ROI Masking: Applying cv.bitwise_and with polygon masks to isolate the driving lane[cite: 1].
-3. Edge Detection: Canny Edge Filter[cite: 1].
-4. Line Extraction: Probabilistic Hough Line Transform[cite: 1].
-5. Slope & Spatial Filtering: Filtering out horizontal segments (e.g., arrows, shadows) by line angle and minimum length.
-6. Lane Departure Logic: Real-time pixel counting inside designated alert zones to trigger warnings[cite: 1].
+1. **Video Capture & Normalization:** Frame resizing to 1080p, Grayscale conversion, and Gaussian Blur to reduce high-frequency noise.
+2. **Edge Detection:** Canny Edge Filter applied on the blurred grayscale frame.
+3. **Spatial ROI Masking:** Masking with a polygon region to isolate the road area ahead.
+4. **Line Extraction & Slope Filtering:** Probabilistic Hough Line Transform combined with slope thresholding (`|slope| > 0.5`) to keep relevant lane boundaries.
+5. **Lane Departure Evaluation:** Drawing detected lines onto an alert canvas and checking line invasion within a central trap-zone.
+6. **Alert Logic:** Frame-counter thresholding on positive pixel overlap to trigger warnings and discard momentary false positives.
 
 ---
 
