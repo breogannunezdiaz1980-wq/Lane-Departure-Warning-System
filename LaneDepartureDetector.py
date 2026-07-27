@@ -64,11 +64,20 @@ class Lane_Departure_Detector:
     
     def runner(self):
         """
-        This method runs the video and contains the other class
+        This method runs the video and contains the other classes.
+
+        1: Initialize the alert
+        2: We run the video
+        3: While video is running we clean, we draw and we detect where is the car
+
+        If you want to close the window you have to press 'q'
         """
-        
+
+        #We create the canvases.
         filters_canvases = self.canvases()
+        #We initialize the alert in order to detect the lane departure.
         alertt = Alert(filters_canvases[1])
+        
         while True:
             state, frame = self.route.read()
             if not state:
