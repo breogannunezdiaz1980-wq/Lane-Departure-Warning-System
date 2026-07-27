@@ -1,0 +1,20 @@
+import cv2 as cv
+import numpy as np
+
+class Filter_Lane_Departure:
+    
+    def __init__(self, frame, filters_tuple):
+        self.frame = frame
+        self.filters = filters_tuple
+    
+    def roi_edge_filters(self):
+        #BGR to gray scale
+        frame_gray = cv.cvtColor(self.frame, cv.COLOR_BGR2GRAY)
+        #We blur the image in order to remove the noise
+        frame_gray = cv.GaussianBlur(frame_gray, (9, 9), 0)
+        #Using the gradient we detect the edges
+        canny_edge = cv.Canny(frame_gray, 30, 90)
+        #We apply the draw triangle to the frame
+        roi_edge = cv.bitwise_and(canny_edge, self.filters[0])
+        roi_edge = cv.bitwise_and(roi_edge, self.filters[2])
+        return roi_edge
