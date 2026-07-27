@@ -2,12 +2,27 @@ import cv2 as cv
 import numpy as np
 
 class Hough:
+    """
+    This class represents the Hough transform.
+    """
     
     def __init__(self, roi_edge, frame):
+        """
+        Here we initialize the object.
+
+        self.roi_edge -> It is the frame with the filters.
+        self.roi_edge -> It is the original frame.
+        """
         self.roi_edge = roi_edge
         self.frame = frame
         
     def hough_transform(self):
+        """
+        This method draw the lines in the original frame and in another new one
+        that will be use by Alert class.
+        """
+
+        #The new image
         area_detect = np.zeros((1080, 1920), np.uint8)
         #Using the Hough transform we draw the lines
         lines = cv.HoughLinesP(self.roi_edge, rho=1, theta=np.pi/180, threshold=40, minLineLength=30, maxLineGap=20)
