@@ -2,7 +2,7 @@ import cv2 as cv
 import numpy as np
 from Filters import *
 from Hough import *
-from alert import *
+from Alert import *
 
 class Lane_Departure_Detector:
     """
