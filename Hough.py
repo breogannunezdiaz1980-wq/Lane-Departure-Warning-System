@@ -28,7 +28,7 @@ class Hough:
         lines = cv.HoughLinesP(self.roi_edge, rho=1, theta=np.pi/180, threshold=40, minLineLength=30, maxLineGap=20)
         if lines is not None:
             for line in lines:
-                x1, y1, x2, y2, = line[0]
+                x1, y1, x2, y2, = line
                 #We discard the vertical lines
                 if x2 - x1 == 0:
                     continue
