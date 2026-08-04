@@ -1,6 +1,7 @@
 import cv2 as cv
 import numpy as np
 
+
 class Filter_Lane_Departure:
     """
     This class represents the filter
@@ -26,7 +27,7 @@ class Filter_Lane_Departure:
         #BGR to gray scale
         frame_gray = cv.cvtColor(self.frame, cv.COLOR_BGR2GRAY)
         #We blur the image in order to remove the noise
-        frame_gray = cv.GaussianBlur(frame_gray, (9, 9), 0)
+        frame_gray = cv.GaussianBlur(frame_gray, (7, 7), 0)
         #Using the gradient we detect the edges
         canny_edge = cv.Canny(frame_gray, 30, 90)
         #We apply the draw triangle and the cleaner square to the frame
