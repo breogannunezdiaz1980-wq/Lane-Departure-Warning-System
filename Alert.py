@@ -16,8 +16,9 @@ class Alert:
         
         self.filter = filter
         self.frame_count = 0
-    
-    def lane_departure_detector(self, area_detector):
+        self.control = 0
+
+    def lane_departure_detector(self, area_detector, frame):
         """
         This method verify if the frame has a line
         """
@@ -29,7 +30,15 @@ class Alert:
         if pixels > 20: 
             self.frame_count += 1
             if self.frame_count > 6:
-                print('go back')
+                self.control = 30
+                cv.putText(frame, "Detour detected", (50, 50), cv.FONT_HERSHEY_COMPLEX, 1.0, (0, 0, 255), 2, cv.LINE_AA )
+            else:
+                if self.control > 0:
+                    self.control -= 1
+                    cv.putText(frame, "Detour detected", (50, 50), cv.FONT_HERSHEY_COMPLEX, 1.0, (0, 0, 255), 2, cv.LINE_AA )
         else:
             #We have to restart the frame_count to avoid bugs
             self.frame_count = 0
+            if self.control > 0:
+                self.control -= 1
+                cv.putText(frame, "Detour detected", (50, 50), cv.FONT_HERSHEY_COMPLEX, 1.0, (0, 0, 255), 2, cv.LINE_AA )
