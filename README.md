@@ -17,7 +17,7 @@ In Spain, nearly 32% of traffic accidents are caused by driver distractions lead
 - **Hough Line Detection & Masking:** Spatial Region of Interest (ROI) filtering to isolate relevant road markings.
 - **Slope-Based Filtering:** Discards horizontal and near-horizontal segments to eliminate noise and irrelevant markings.
 - **Spatial Trap-Zone Logic:** Fast pixel-counting mechanism (`countNonZero`) inside designated alert zones to detect lane invasion.
-- **Cross-Platform & Lightweight:** Optimized for ~60 FPS on standard hardware.
+- **Cross-Platform & Lightweight:** Optimized for ~30 FPS on standard hardware.
 
 ---
 
