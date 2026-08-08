@@ -28,81 +28,44 @@ class Lane_Departure_Detector:
         """
         This method creates the necessary masks using scaling.
         
-        draw_triangle -> It will be use by Filters class to clean the frame
-        detector_triangle -> It will br use by the Alert class
-        cleaner_square -> It will be use by Filters (Actually, this does not work)
+        draw_square -> It will be use by Filters class to clean the frame
+        detector_squares -> It will br use by the Alert class
+        cleaner_triangle -> It will be use by Filters (Actually, this does not work)
         """
-        #Truck canvases are not working properly
-        if (self.type == "truck"):
-            draw_triangle = np.zeros(self.shape, np.uint8)
-            points = np.array(
-                [[self.shape[1]//2, self.shape[0]//1.894736842], 
-                [self.shape[1]//8.347826087, self.shape[0]//1.35],
-                [self.shape[1]//1.170731707, self.shape[0]//1.35]],
-                dtype=np.int32)
-            cv.fillPoly(draw_triangle, [points], 255, lineType=cv.LINE_AA)
-
-            detector_triangle = np.zeros(self.shape, np.uint8)
-            points = np.array(
-                [[self.shape[1]//2, self.shape[0]//1.714285714],
-                [self.shape[1]//2.953846154, self.shape[0]//1.35],
-                [self.shape[1]//1.6, self.shape[0]//1.35]],
-                dtype=np.int32
-            )
-            cv.fillPoly(detector_triangle, [points], 255, lineType=cv.LINE_AA)
-            
-            cleaner_triangle = np.zeros(self.shape, np.uint8)
-            points = np.array(
-                        [[self.shape[1]//4.26666667, self.shape[0]//3.375],
-                        [self.shape[1]//1.30612, self.shape[0]//3.375],
-                        [self.shape[1]//2, self.shape[0] // 1.35]],
-                        dtype=np.int32
-                    )
-            cv.fillPoly(cleaner_triangle, [points], 255, lineType=cv.LINE_AA)
-            cleaner_triangle = cv.bitwise_not(cleaner_triangle)
-            
-            return (draw_triangle, detector_triangle, cleaner_triangle)
-        
-        elif self.type == "car":
-            draw_square = np.zeros(self.shape, np.uint8)
-            points = np.array(
+        draw_square = np.zeros(self.shape, np.uint8)
+        points = np.array(
                 [[self.shape[1]//12, self.shape[0]], 
                 [self.shape[1]//2.157303, self.shape[0]//1.5],
                 [self.shape[1]//1.864077, self.shape[0]//1.5],
                 [self.shape[1]//1.0909091, self.shape[0]]],
                 dtype=np.int32)
-            cv.fillPoly(draw_square, [points], 255, lineType=cv.LINE_AA)
+        cv.fillPoly(draw_square, [points], 255, lineType=cv.LINE_AA)
 
-            detector_square = np.zeros(self.shape, np.uint8)
-            points = np.array(
+        detector_square = np.zeros(self.shape, np.uint8)
+        points = np.array(
                 [[self.shape[1]//2.577181, self.shape[0]],
                  [self.shape[1]//2.245614, self.shape[0]//1.27],
                  [self.shape[1]//2.169492, self.shape[0]//1.27],
                  [self.shape[1]//2.327273, self.shape[0]]],
                 dtype=np.int32)
-            cv.fillPoly(detector_square, [points], 255, lineType=cv.LINE_AA)
-            points = np.array(
+        cv.fillPoly(detector_square, [points], 255, lineType=cv.LINE_AA)
+        points = np.array(
                 [[self.shape[1]//1.634043, self.shape[0]],
                 [self.shape[1]//1.802817, self.shape[0]//1.27],
                 [self.shape[1]//1.855072, self.shape[0]//1.27],
                 [self.shape[1]//1.753425, self.shape[0]]],
                 dtype=np.int32)
-            cv.fillPoly(detector_square, [points], 255, lineType=cv.LINE_AA)
+        cv.fillPoly(detector_square, [points], 255, lineType=cv.LINE_AA)
 
-            cleaner_square = np.zeros(self.shape, np.uint8)
-            points = np.array(
-                        [[self.shape[1]//4.26666667, self.shape[0]//1.8],
-                        [self.shape[1]//1.30612, self.shape[0]//1.8],
-                        [self.shape[1]//2, self.shape[0]]],
-                        dtype=np.int32
-                    )
-            cv.fillPoly(cleaner_square, [points], 255, lineType=cv.LINE_AA)
-            cleaner_square = cv.bitwise_not(cleaner_square)
-            cv.imshow("Cleaner Square", cleaner_square) # BORRAR LUEGO
-        else:
-            print("Error: type not recognized")
-            return None
-        return (draw_square, detector_square, cleaner_square)
+        cleaner_triangle = np.zeros(self.shape, np.uint8)
+        points = np.array(
+                [[self.shape[1]//4.26666667, self.shape[0]//1.8],
+                [self.shape[1]//1.30612, self.shape[0]//1.8],
+                [self.shape[1]//2, self.shape[0]]],
+                dtype=np.int32)
+        cv.fillPoly(cleaner_triangle, [points], 255, lineType=cv.LINE_AA)
+        cleaner_triangle = cv.bitwise_not(cleaner_triangle)
+        return (draw_square, detector_square, cleaner_triangle)
 
     def runner(self):
         """
@@ -133,7 +96,7 @@ class Lane_Departure_Detector:
             filters = Filter_Lane_Departure(frame, filters_canvases)
             roi_edge = filters.roi_edge_filters()
             #We do the transform
-            hough = Hough(roi_edge, frame)
+            hough = Hough(roi_edge, frame, self.shape)
             frame, area_detector = hough.hough_transform()
             #We see if the car is leaking out.
             alertt.lane_departure_detector(area_detector, frame)
@@ -141,7 +104,7 @@ class Lane_Departure_Detector:
             #We reproduce the video with the lines.
             cv.imshow('Reproduccion Video', frame)
             #Press 'q' to close the windows
-            if cv.waitKey(17) & 0xFF == ord('q'):
+            if cv.waitKey(33) & 0xFF == ord('q'):
                 break
         self.route.release()
         cv.destroyAllWindows()
