@@ -30,7 +30,7 @@ class Lane_Departure_Detector:
         
         draw_square -> It will be use by Filters class to clean the frame
         detector_squares -> It will br use by the Alert class
-        cleaner_triangle -> It will be use by Filters (Actually, this does not work)
+        cleaner_triangle -> It will be use by Filters
         """
         draw_square = np.zeros(self.shape, np.uint8)
         points = np.array(
