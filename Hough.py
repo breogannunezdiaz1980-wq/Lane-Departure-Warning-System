@@ -6,7 +6,7 @@ class Hough:
     This class represents the Hough transform.
     """
     
-    def __init__(self, roi_edge, frame):
+    def __init__(self, roi_edge, frame, dimensions): 
         """
         Here we initialize the object.
 
@@ -15,6 +15,7 @@ class Hough:
         """
         self.roi_edge = roi_edge
         self.frame = frame
+        self.dimensions = dimensions
         
     def hough_transform(self):
         """
@@ -23,7 +24,7 @@ class Hough:
         """
 
         #The new image
-        area_detect = np.zeros((1080, 1920), np.uint8)
+        area_detect = np.zeros(self.dimensions, np.uint8)
         #Using the Hough transform we draw the lines
         lines = cv.HoughLinesP(self.roi_edge, rho=1, theta=np.pi/180, threshold=40, minLineLength=30, maxLineGap=20)
         if lines is not None:
